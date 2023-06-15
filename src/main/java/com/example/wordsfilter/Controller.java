@@ -20,6 +20,10 @@ public class Controller {
         ObservableList<String> observableList = FXCollections.observableArrayList(words);
         wordList.setItems(observableList);
     }
+    public String getFilterField() {
+        return filterField.getText();
+    }
+
 
 
 }

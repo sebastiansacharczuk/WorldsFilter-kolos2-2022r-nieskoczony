@@ -11,7 +11,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ClientApplication extends Application {
@@ -36,13 +41,20 @@ public class ClientApplication extends Application {
         writer = new PrintWriter(socket.getOutputStream(), true);
 
         words = new ArrayList<>();
+        Comparator<String> comparator = Comparator.comparing(str -> str.split(" ")[1]);
 
         Thread receiveThread = new Thread(() -> {
             try {
                 String message;
                 while ((message = reader.readLine()) != null) {
                     System.out.println(message);
-                    words.add(message);
+
+                    LocalTime currentTime = LocalTime.now();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+                    String formattedTime = currentTime.format(formatter);
+                    words.add(formattedTime+ " " + message);
+
+                    Collections.sort(words, comparator);
                     Platform.runLater(() -> controller.incrementWordCountLabelText()); // Wywołanie metody na wątku JavaFX
                     Platform.runLater(() -> controller.setWordList(words));
                 }
