@@ -11,8 +11,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientApplication extends Application {
+    private List<String> words;
     private Socket socket;
     private PrintWriter writer;
     private Controller controller;
@@ -32,12 +35,16 @@ public class ClientApplication extends Application {
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         writer = new PrintWriter(socket.getOutputStream(), true);
 
+        words = new ArrayList<>();
+
         Thread receiveThread = new Thread(() -> {
             try {
                 String message;
                 while ((message = reader.readLine()) != null) {
                     System.out.println(message);
+                    words.add(message);
                     Platform.runLater(() -> controller.incrementWordCountLabelText()); // Wywołanie metody na wątku JavaFX
+                    Platform.runLater(() -> controller.setWordList(words));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
