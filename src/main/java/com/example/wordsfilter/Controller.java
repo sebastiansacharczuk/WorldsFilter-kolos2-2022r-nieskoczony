@@ -9,11 +9,7 @@ public class Controller {
     public TextField filterField;
     public ListView wordList;
     public Label wordCountLabel;
-    @FXML
-    private Label welcomeText;
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+    public void incrementWordCountLabelText() {
+        wordCountLabel.setText(String.valueOf(Integer.valueOf(wordCountLabel.getText()) + 1));
     }
 }
